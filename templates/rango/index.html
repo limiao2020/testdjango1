@@ -14,7 +14,7 @@
         hey there partner!
     </div>
     <div>
-        <h2></h2>
+        <h2>Most Liked Categories</h2>
         {% if categories %}
         <ul>
             {% for category in categories %}
@@ -28,10 +28,13 @@
         {% endif %}
     </div>
     <div>
+        <h2>Most Viewed Pages</h2>
         {% if pages %}
         <ul>
             {% for page in pages %}
-                <h2>{{ page.title }}</h2>
+                <li>
+                    <a href="{{ page.url }}">{{ page.title }}</a>
+                </li>
             {% endfor %}
         </ul>
         {% else %}
@@ -40,6 +43,7 @@
     </div>
     <div>
         <a href="/rango/about/">about Rango</a><br/>
+        <a href="/rango/add_category/">Add a New Category</a><br />
         <img src="{% static "image/rango.jpg" %}" alt = "picture of Rango" />
     </div>
 </body>
