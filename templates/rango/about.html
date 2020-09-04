@@ -1,18 +1,24 @@
-<!DOCTYPE html>
-<!--{% load static %}-->
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>about</title>
-</head>
-<body>
-<h1>{{ head }}{{ message }}{{ STATIC_URL }}{{ MEDIA_URL }}</h1>
-<ul>This tutorial has been put together by limiao.</ul>
-<img src="{% static "image/Jellyfish.jpg" %}" alt = 'jellyfish'/>
-<img src="{{ STATIC_URL }}image/Jellyfish.jpg" alt = 'jellyfish1'/>
-<div>
-    <h4>姓名：{{ name }}</h4>
-    <img src="{{ MEDIA_URL}}headpic/2245_bigcat.jpg"}"/>
-</div>
-</body>
-</html>
+{% extends 'rango/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    About
+{% endblock %}
+
+{% block body_block %}
+        <div>
+	        <h1 class="page-header">About Page</h1>
+	        This tutorial has been put together by: leifos and maxwelld90
+		</div>
+		<img src="{% static "image/rango.jpg" %}" alt="Picture of Rango" />
+		<p>
+		<img src="{{MEDIA_URL}}cat.jpg" alt="Picture of Elgin the Cat from Rango">
+		<p>
+		The image of the cat was taken from <a href="http://lizzychrome.deviantart.com/art/Elgin-424012566">	Deviant Art by LizzyChrome</a>.
+	</p>
+	<hr>
+
+		<button class="btn btn-primary" id="about-btn"> JQuery Alert Example</button>
+	<p>This text is for a Jquery Example - I'll turn red when you hover over me.</p>
+	<div id="msg">Hello - I'm here for a Jquery Example too</div>
+{% endblock %}

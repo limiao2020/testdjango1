@@ -1,17 +1,19 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load static %}
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Rango1</title>
-    <link rel="stylesheet" href="{% static "css/base.css" %}"/>
-    <script src = "{% static "js/jsquery.js" %}"></script>
 
-</head>
-<body>
+{% block title_block %}
+    Index
+{% endblock %}
+
+{% block body_block %}
     <h1>Rango says...</h1>
     <div>
+        {% if user.is_authenticated %}
+            print(user.username,user.password)
+            howdy {{ user.username }}!
+        {% else %}
         hey there partner!
+        {% endif %}
     </div>
     <div>
         <h2>Most Liked Categories</h2>
@@ -42,9 +44,4 @@
         {% endif %}
     </div>
     <div>
-        <a href="/rango/about/">about Rango</a><br/>
-        <a href="/rango/add_category/">Add a New Category</a><br />
-        <img src="{% static "image/rango.jpg" %}" alt = "picture of Rango" />
-    </div>
-</body>
-</html>
+    </div>{% endblock %}
