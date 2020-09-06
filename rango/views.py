@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 # Create your views here.
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
@@ -115,11 +116,11 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(username=username, password=password)
+        user1 = authenticate(username=username, password=password)
 
-        if user:
-            if user.is_active:
-                login(request,user)
+        if user1:
+            if user1.is_active:
+                login(request,user1)
                 return HttpResponseRedirect(reverse('index'))
             else:
                 return HttpResponse("your rango account is disabled.")
@@ -127,4 +128,8 @@ def user_login(request):
             print("invalid login details: {0},{1}".format(username,password))
             return HttpResponse("Invalid login details supplied.")
     else:
-        return render(request,'rango/login.html',{})
+        return render(request,'rango/user_login.html',{})
+
+@login_required
+def restricted(request):
+    return HttpResponse("Since you're logged in, you can see this text!")
