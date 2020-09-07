@@ -17,6 +17,7 @@ def index(request):
     category_dict = {"categories": category_list,"pages":page_list}
     return render(request,'rango/index.html',category_dict)
 
+@login_required
 def about(request):
     # 打印请求方法，是 GET 还是 POST
     print(request.method)
