@@ -4,7 +4,7 @@ from rango.models import Page
 from rango.forms import CategoryForm
 from rango.forms import PageForm
 from rango.forms import UserForm,UserProfileForm
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 # Create your views here.
@@ -17,7 +17,7 @@ def index(request):
     category_dict = {"categories": category_list,"pages":page_list}
     return render(request,'rango/index.html',category_dict)
 
-@login_required
+@login_required(login_url='www.baidu.com')
 def about(request):
     # 打印请求方法，是 GET 还是 POST
     print(request.method)
@@ -134,3 +134,10 @@ def user_login(request):
 @login_required
 def restricted(request):
     return HttpResponse("Since you're logged in, you can see this text!")
+
+@login_required
+def user_logout(request):
+# 可以确定用户已登录，因此直接退出
+    logout(request)
+# 把用户带回首页
+    return HttpResponseRedirect(reverse('index'))
