@@ -10,19 +10,22 @@ from django.urls import reverse
 # Create your views here.
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 def index(request):
+    request.session.set_test_cookie()
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
     category_dict = {"categories": category_list,"pages":page_list}
-    return render(request,'rango/index.html',category_dict)
+    response = render(request,'rango/index.html',category_dict)
+    visitor_cookie_handler(request,response)
+    return response
 
 @login_required(login_url='www.baidu.com')
 def about(request):
-    # 打印请求方法，是 GET 还是 POST
-    print(request.method)
-# 打印用户名，如未登录，打印“AnonymousUser”
-    print(request.user)
+    if request.session.test_cookie_worked():
+        print("TEST COOKIE WORKED!")
+    request.session.delete_test_cookie()
     return render(request, 'rango/about.html', {})
     '''
     context_dict = {'message': "ok!", 'head':"les's go!",'name':"limiao"}
@@ -42,6 +45,7 @@ def show_category(request, category_name_slug):
 
     return render(request,'rango/category.html',context=context_dict)
 
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -56,6 +60,7 @@ def add_category(request):
             print(form.errors)
     return render(request,'rango/add_category.html',{'form':form})
 
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug = category_name_slug)
@@ -133,7 +138,7 @@ def user_login(request):
 
 @login_required
 def restricted(request):
-    return HttpResponse("Since you're logged in, you can see this text!")
+    return render(request,'rango/restricted.html',{})
 
 @login_required
 def user_logout(request):
@@ -141,3 +146,15 @@ def user_logout(request):
     logout(request)
 # 把用户带回首页
     return HttpResponseRedirect(reverse('index'))
+
+def visitor_cookie_handler(request, response):
+    visits = int(request.COOKIES.get('visits','1'))
+    last_visit_cookie = request.COOKIES.get('last_visit',str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7],'%Y-%m-%d %H:%M:%S')
+
+    if (datetime.now() - last_visit_time).seconds > 10:
+        visits = visits + 1
+        response.set_cookie('last_visit', str(datetime.now()))
+    else:
+        response.set_cookie('last_visit', last_visit_cookie)
+    response.set_cookie('visits', visits)
