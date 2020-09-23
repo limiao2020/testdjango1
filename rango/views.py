@@ -25,9 +25,6 @@ def index(request):
 
 @login_required(login_url='www.baidu.com')
 def about(request):
-    if request.session.test_cookie_worked():
-        print("TEST COOKIE WORKED!")
-    request.session.delete_test_cookie()
     return render(request, 'rango/about.html', {})
     '''
     context_dict = {'message': "ok!", 'head':"les's go!",'name':"limiao"}
