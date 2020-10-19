@@ -169,8 +169,22 @@ def get_server_side_cookie(request, cookie, dafault_val = None):
 
 def search(request):
     result_list = []
+    query = ''
     if request.method == 'POST':
         query = request.POST['query'].strip()
         if query:
             result_list = run_query(query)
-    return render(request, 'rango/search.html',{'result_list': result_list})
+    return render(request, 'rango/search.html',{'result_list': result_list, 'query': query})
+
+def track_url(request):
+    page_id = None
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+
+            page = Page.objects.get(id=page_id)
+            page.views = page.views + 1
+            page.save()
+            return HttpResponseRedirect(page.url)
+        else:
+            return HttpResponseRedirect(reverse('index'))
