@@ -41,6 +41,17 @@ class UserForm(forms.ModelForm):
         fields = ('username','email','password')
 
 class UserProfileForm(forms.ModelForm):
+    website = forms.URLField(required=False)
+    picture = forms.ImageField(required=False)
     class Meta:
         model = UserProfile
         fields = ('website','picture')
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        website = cleaned_data.get('website')
+
+        if website and not website.startswith('http://'):
+            website = 'https://'+ website
+            cleaned_data['website'] = website
+            return cleaned_data

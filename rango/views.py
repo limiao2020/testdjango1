@@ -43,6 +43,15 @@ def show_category(request, category_name_slug):
         context_dict['pages'] = None
         context_dict['category'] = None
 
+    context_dict['query'] = category.name
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+            context_dict['query'] = query
+    context_dict['result_list'] = result_list
     return render(request,'rango/category.html',context=context_dict)
 
 @login_required
@@ -188,3 +197,22 @@ def track_url(request):
             return HttpResponseRedirect(page.url)
         else:
             return HttpResponseRedirect(reverse('index'))
+
+@login_required
+def register_profile(request):
+    form = UserProfileForm()
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            print(form.errors)
+
+    context_dict = {'form':form}
+
+    return render(request, 'rango/profile_registration.html', context_dict)
+
