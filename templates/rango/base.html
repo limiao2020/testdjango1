@@ -46,6 +46,7 @@
 {% load rango_template_tags %}
 <script src="{% static "js/jquery.min.js" %}"></script>
 <script src="{% static "js/rango-jquery.js" %}"></script>
+{#<script src="{% static "js/rango-ajax.js" %}"></script>#}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -125,9 +126,22 @@ initial-scale=1, shrink-to-fit=no">
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-list flex-column">
+                <li class="nav-item">Type to find a category</li>
+                <form>
+                    <li class="nav-item"><input class="search-query form-control" type="text"
+                                                name="suggestion" value="" id="suggestion" />
+                    </li>
+                </form>
+            </ul>
+            <hr>
+            <div id="cats">
+            </div>
+{% comment %}
             {% block sidebar_block %}
                 {% get_category_list category %}
             {% endblock %}
+{% endcomment %}
         </div>
         <div class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 main">
             {% block body_block %}{% endblock %}
